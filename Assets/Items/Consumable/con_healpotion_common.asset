@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7114d3fa7072e674d89d631a6f444675, type: 3}
+  m_Name: con_healpotion_common
+  m_EditorClassIdentifier: Assembly-CSharp::ItemDataSO
+  id: con_healpotion_common
+  displayName: "\uD558\uAE09 \uCCB4\uB825\uD3EC\uC158"
+  description: "\uAC70\uCE5C \uBD81\uBC29\uC5D0\uC11C \uC0AC\uC6A9\uB418\uB294 \uAC00\uC7A5
+    \uAE30\uBCF8\uC801\uC778 \uD68C\uBCF5 \uBB3C\uC57D.\n\uB9C8\uC2DC\uBA74 \uC18C\uB7C9\uC758
+    \uCCB4\uB825\uC744 \uD68C\uBCF5\uD55C\uB2E4."
+  effectDesc: "\uCD5C\uB300 \uCCB4\uB825\uC758 20%\uB97C \uD68C\uBCF5\uD55C\uB2E4."
+  icon: {fileID: 21300000, guid: f17362e70f8ce464dbf65d90262f5085, type: 3}
+  category: 0
+  grade: 0
+  stackable: 1
+  maxStack: 99
+  useSfx: {fileID: 8300000, guid: 29d90d896ec76a94da008a309c4f4a8e, type: 3}
+  useSfxVolume: 1
+  useVfxPrefab: {fileID: 207745087118991948, guid: e3b917be9fa2e5a4886e08aa85ac0af2, type: 3}
+  useCooldown: 2
+  equipSlot: 0
+  equipStats: []
+  onUseEffects:
+  - {fileID: 11400000, guid: 7b2f7267f63a0ce4a923d3398876673c, type: 2}

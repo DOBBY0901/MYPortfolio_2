@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8599b1f64a857d418fbd7532ca9b1a6, type: 3}
+  m_Name: DropTableSO
+  m_EditorClassIdentifier: Assembly-CSharp::DropTableSO
+  drops:
+  - item: {fileID: 11400000, guid: 0d16f455f816d96439d8cc85fad60444, type: 2}
+    chance: 1
+    minAmount: 1
+    maxAmount: 3
+  - item: {fileID: 11400000, guid: ca42eaf5ef6c30744b989575e4039040, type: 2}
+    chance: 1
+    minAmount: 1
+    maxAmount: 3
+  - item: {fileID: 11400000, guid: 41b57988fa212914ebeee48a9c56bd36, type: 2}
+    chance: 1
+    minAmount: 1
+    maxAmount: 1
+  - item: {fileID: 11400000, guid: afdb423f794b8f54f96b9ed66c2a8a4f, type: 2}
+    chance: 1
+    minAmount: 1
+    maxAmount: 1
+  - item: {fileID: 11400000, guid: 1fa1b62cc4856ce479586ee93d8504b8, type: 2}
+    chance: 1
+    minAmount: 1
+    maxAmount: 1
+  - item: {fileID: 11400000, guid: c55245b226f08f14dbb9f10fdd614d86, type: 2}
+    chance: 1
+    minAmount: 1
+    maxAmount: 1
+  - item: {fileID: 11400000, guid: bf51dc973b20d824bb67d9f0279c8c67, type: 2}
+    chance: 1
+    minAmount: 1
+    maxAmount: 1
