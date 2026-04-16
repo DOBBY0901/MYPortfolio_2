@@ -52,7 +52,7 @@ public class WolfEncounterSequence : MonoBehaviour
             agent.isStopped = true;
     }
 
-    public void StartEncounter() //늑대 
+    public void StartEncounter() 
     {
         if (hasStarted) return;
         StartCoroutine(EncounterRoutine());
@@ -72,15 +72,15 @@ public class WolfEncounterSequence : MonoBehaviour
         if (dir.sqrMagnitude > 0.001f)
             transform.rotation = Quaternion.LookRotation(dir);
 
-        animator.SetTrigger("Howl");
-        AudioManager.Instance?.Play3DSfx(howlSfx, transform.position);
-
+        AudioManager.Instance?.Play3DSfx(howlSfx, transform.position, 15f); //늑대 하울링 사운드 출력
+        
+        animator.SetTrigger("Howl"); //Howl 트리거 실행
         yield return new WaitForSeconds(howlDuration);
 
         animator.StopPlayback();
+        animator.SetFloat("Speed", 1f); //달리기 애니메이션 용 파라미터 제어
         float timer = 0f;
 
-        animator.SetFloat("Speed", 1f); //달리기 애니메이션 용 파라미터 제어
         while (timer < rushDuration)
         {
             timer += Time.deltaTime;

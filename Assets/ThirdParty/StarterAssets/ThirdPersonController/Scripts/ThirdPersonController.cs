@@ -82,6 +82,7 @@ namespace StarterAssets
         public AudioClip SnowLandingClip;
         public AudioClip CaveLandingClip;
 
+
         // === Attack Lock ===
         [Header("Combat")]
         [Tooltip("If true, movement is blocked while attack animation plays (via Animation Events).")]
@@ -103,6 +104,9 @@ namespace StarterAssets
         private bool _wasBackward;
         private float _backwardLockedYaw;
         private float _environmentMoveMultiplier = 1f;
+        private Vector3 _rollDirection;
+        private bool _rollPressedLastFrame;
+
 
         // timeout deltatime
         private float _jumpTimeoutDelta;
@@ -180,6 +184,7 @@ namespace StarterAssets
 
             JumpAndGravity();
             GroundedCheck();
+            HandleRollInput();
             Move();
         }
 
@@ -387,6 +392,37 @@ namespace StarterAssets
                 _verticalVelocity += Gravity * Time.deltaTime;
         }
 
+        private void HandleRollInput()
+        {
+            Debug.Log("HandleRollInput 실행중");
+            // 버튼 "눌린 순간"만 잡기
+            if (_input.roll && !_rollPressedLastFrame)
+            {
+                _rollDirection = CalculateRollDirection();
+                Debug.Log($"구르기 방향: {_rollDirection}");
+
+                _input.roll = false;
+            }
+
+            _rollPressedLastFrame = _input.roll;
+        }
+        private Vector3 CalculateRollDirection() //구르기 방향 계산
+        {
+            // 현재 이동 입력
+            Vector3 inputDirection = new Vector3(_input.move.x, 0f, _input.move.y);
+
+            // 방향 입력이 없으면 캐릭터 정면으로
+            if (inputDirection.sqrMagnitude < 0.01f)
+            {
+                return transform.forward.normalized;
+            }
+
+            // 카메라 기준 방향으로 변환
+            Vector3 rollDirection = Quaternion.Euler(0.0f, _mainCamera.transform.eulerAngles.y, 0.0f) * inputDirection;
+            rollDirection.y = 0f;
+
+            return rollDirection.normalized;
+        }
         private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
         {
             if (lfAngle < -360f) lfAngle += 360f;

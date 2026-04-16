@@ -1,6 +1,7 @@
 using UnityEngine;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 #endif
 
 namespace StarterAssets
@@ -13,6 +14,7 @@ namespace StarterAssets
 		public bool jump;
 		public bool sprint;
         public bool attack;
+		public bool roll;
 
         [Header("Movement Settings")]
 		public bool analogMovement;
@@ -48,6 +50,11 @@ namespace StarterAssets
         {
             attack = value.isPressed;
         }
+        public void OnRoll(InputValue value)
+        {
+			Debug.Log("Onroll");
+			RollInput(value.isPressed);
+        }
 
 #endif
 
@@ -72,7 +79,12 @@ namespace StarterAssets
 			sprint = newSprintState;
 		}
 
-		private void OnApplicationFocus(bool hasFocus)
+        public void RollInput(bool newRollState)
+        {
+            roll = newRollState;
+        }
+
+        private void OnApplicationFocus(bool hasFocus)
 		{
 			SetCursorState(cursorLocked);
 		}
