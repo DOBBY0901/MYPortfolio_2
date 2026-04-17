@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Unity.VisualScripting;
+using UnityEngine;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
@@ -82,6 +83,10 @@ namespace StarterAssets
         public AudioClip SnowLandingClip;
         public AudioClip CaveLandingClip;
 
+        [Header("Roll")]
+        [SerializeField] private float rollSpeed = 8f;
+        [SerializeField] private float rollDuration = 0.35f;
+        [SerializeField] private float rollCooldown = 0.3f;
 
         // === Attack Lock ===
         [Header("Combat")]
@@ -104,8 +109,12 @@ namespace StarterAssets
         private bool _wasBackward;
         private float _backwardLockedYaw;
         private float _environmentMoveMultiplier = 1f;
+       
+        //Roll
         private Vector3 _rollDirection;
         private bool _rollPressedLastFrame;
+        private bool _isRolling;
+        private bool _canRoll = true;
 
 
         // timeout deltatime
@@ -120,6 +129,7 @@ namespace StarterAssets
         private int _animIDMotionSpeed;
         private int _animIDMoveX;
         private int _animIDMoveY;
+        private int _animIDRoll;
 
 
 #if ENABLE_INPUT_SYSTEM
@@ -202,6 +212,7 @@ namespace StarterAssets
             _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
             _animIDMoveX = Animator.StringToHash("MoveX");
             _animIDMoveY = Animator.StringToHash("MoveY");
+            _animIDRoll = Animator.StringToHash("Roll");
 
         }
 
@@ -235,8 +246,8 @@ namespace StarterAssets
 
         private void Move()
         {
-            // 공격 중 이동/회전 잠금
-            if (LockMoveWhileAttacking && _isAttacking)
+            // 공격 중, 구르기 중 이동/회전 잠금
+            if (LockMoveWhileAttacking && _isAttacking && _isRolling)
             {
                 _speed = 0f;
                 _animationBlend = Mathf.Lerp(_animationBlend, 0f, Time.deltaTime * SpeedChangeRate);
@@ -396,15 +407,15 @@ namespace StarterAssets
         {
             Debug.Log("HandleRollInput 실행중");
             // 버튼 "눌린 순간"만 잡기
-            if (_input.roll && !_rollPressedLastFrame)
+            if (_input.roll && !_isRolling && _canRoll && Grounded)
             {
                 _rollDirection = CalculateRollDirection();
+                StartCoroutine(RollRoutine());
                 Debug.Log($"구르기 방향: {_rollDirection}");
-
+                
                 _input.roll = false;
             }
 
-            _rollPressedLastFrame = _input.roll;
         }
         private Vector3 CalculateRollDirection() //구르기 방향 계산
         {
@@ -423,6 +434,39 @@ namespace StarterAssets
 
             return rollDirection.normalized;
         }
+
+        private System.Collections.IEnumerator RollRoutine() //구르기 코루틴
+        {
+            _isRolling = true;
+            _canRoll = false;
+            
+            //카메라 방향으로 구르기
+            if (_rollDirection.sqrMagnitude > 0.001f)
+            {
+                transform.rotation = Quaternion.LookRotation(_rollDirection);
+            }
+
+            float elapsed = 0f;
+
+            while (elapsed < rollDuration)
+            {
+                elapsed += Time.deltaTime;
+
+                // 구르는 방향으로 이동 + 중력 유지
+                Vector3 move = _rollDirection * rollSpeed;
+                move.y = _verticalVelocity;
+
+                _controller.Move(move * Time.deltaTime);
+
+                yield return null;
+            }
+
+            _isRolling = false;
+
+            yield return new WaitForSeconds(rollCooldown);
+            _canRoll = true;
+        }
+
         private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
         {
             if (lfAngle < -360f) lfAngle += 360f;
