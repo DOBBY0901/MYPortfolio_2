@@ -6,6 +6,7 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] private Animator animator;
 
     private StarterAssetsInputs input;
+    private StarterAssets.ThirdPersonController controller;
     private PlayerCombatState combatState;
 
     [Header("Combo")]
@@ -29,11 +30,12 @@ public class PlayerCombat : MonoBehaviour
 
         input = GetComponentInParent<StarterAssetsInputs>();
         combatState = GetComponentInParent<PlayerCombatState>();
+        controller = GetComponentInParent<StarterAssets.ThirdPersonController>();
     }
 
     private void Update()
     {
-        if (input == null) return;
+        if (input == null || controller._isRolling || controller._speed >= 5f) return;
 
         //콤보를 이어가는 버퍼타이머 감소
         if (_bufferTimer > 0f)

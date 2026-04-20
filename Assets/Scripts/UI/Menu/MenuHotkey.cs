@@ -18,9 +18,6 @@ public class MenuHotkey : MonoBehaviour
         if (kb.uKey.wasPressedThisFrame) // U키를 누르면 장비창
             menu.ToggleEquipment();
 
-        if (kb.mKey.wasPressedThisFrame) // M키를 누르면 맵
-            menu.ToggleMap();
-
         if (kb.escapeKey.wasPressedThisFrame) // ESC키를 누르면 설정/닫기
             menu.EscAction();
     }

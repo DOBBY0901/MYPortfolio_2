@@ -84,15 +84,18 @@ namespace StarterAssets
         public AudioClip CaveLandingClip;
 
         [Header("Roll")]
+        PlayerCombatState playerCombatState;
         [SerializeField] private float rollSpeed = 8f;
         [SerializeField] private float rollDuration = 0.35f;
         [SerializeField] private float rollCooldown = 0.3f;
+
+        [Header("Animator Layers")]
+        [SerializeField] private string combatUpperBodyLayerName = "UpperBody";
 
         // === Attack Lock ===
         [Header("Combat")]
         [Tooltip("If true, movement is blocked while attack animation plays (via Animation Events).")]
         public bool LockMoveWhileAttacking = true;
-
         private bool _isAttacking;
 
         // cinemachine
@@ -100,7 +103,7 @@ namespace StarterAssets
         private float _cinemachineTargetPitch;
 
         // player
-        private float _speed;
+        public float _speed;
         private float _animationBlend;
         private float _targetRotation = 0.0f;
         private float _rotationVelocity;
@@ -113,9 +116,9 @@ namespace StarterAssets
         //Roll
         private Vector3 _rollDirection;
         private bool _rollPressedLastFrame;
-        private bool _isRolling;
+        public bool  _isRolling;
         private bool _canRoll = true;
-
+   
 
         // timeout deltatime
         private float _jumpTimeoutDelta;
@@ -131,6 +134,8 @@ namespace StarterAssets
         private int _animIDMoveY;
         private int _animIDRoll;
 
+        // animation Layer
+        private int _combatUpperBodyLayerIndex = -1; //상반신 전투 레이어
 
 #if ENABLE_INPUT_SYSTEM
         private PlayerInput _playerInput;
@@ -181,6 +186,12 @@ namespace StarterAssets
 
             _jumpTimeoutDelta = JumpTimeout;
             _fallTimeoutDelta = FallTimeout;
+
+            if (_hasAnimator) //전투 중 상반신 애니메이션 레이어 찾기
+            {
+                _combatUpperBodyLayerIndex = _animator.GetLayerIndex(combatUpperBodyLayerName);
+            }
+
         }
 
         private void Update()
@@ -437,10 +448,22 @@ namespace StarterAssets
 
         private System.Collections.IEnumerator RollRoutine() //구르기 코루틴
         {
+       
             _isRolling = true;
             _canRoll = false;
-            
-            //카메라 방향으로 구르기
+
+            // 회전 전 기준으로 방향 계산
+            Vector3 localRollDir = transform.InverseTransformDirection(_rollDirection);
+
+            SetCombatUpperBodyLayerEnabled(false);
+
+            if (_hasAnimator)
+            {
+                _animator.SetFloat(_animIDSpeed, 0f);
+                _animator.SetFloat(_animIDMotionSpeed, 0f);
+                _animator.SetTrigger(_animIDRoll);
+            }
+
             if (_rollDirection.sqrMagnitude > 0.001f)
             {
                 transform.rotation = Quaternion.LookRotation(_rollDirection);
@@ -452,12 +475,10 @@ namespace StarterAssets
             {
                 elapsed += Time.deltaTime;
 
-                // 구르는 방향으로 이동 + 중력 유지
                 Vector3 move = _rollDirection * rollSpeed;
                 move.y = _verticalVelocity;
 
                 _controller.Move(move * Time.deltaTime);
-
                 yield return null;
             }
 
@@ -465,6 +486,16 @@ namespace StarterAssets
 
             yield return new WaitForSeconds(rollCooldown);
             _canRoll = true;
+            SetCombatUpperBodyLayerEnabled(true);
+
+        }
+
+        private void SetCombatUpperBodyLayerEnabled(bool enabled) //전투용 상반신레이어 비활성화
+        {
+            if (!_hasAnimator) return;
+            if (_combatUpperBodyLayerIndex < 0) return;
+
+            _animator.SetLayerWeight(_combatUpperBodyLayerIndex, enabled ? 1f : 0f);
         }
 
         private static float ClampAngle(float lfAngle, float lfMin, float lfMax)

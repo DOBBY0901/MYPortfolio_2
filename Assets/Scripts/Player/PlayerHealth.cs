@@ -15,6 +15,8 @@ public class PlayerHealth : MonoBehaviour
     [Header("Stats")]
     [SerializeField] private PlayerStats playerStats;
 
+    private StarterAssets.ThirdPersonController controller;
+
     public int CurrentHP { get; private set; }
 
     public int MaxHP => maxHP;
@@ -35,6 +37,8 @@ public class PlayerHealth : MonoBehaviour
         hitReaction = GetComponent<PlayerHitReaction>();
         combatState = GetComponent<PlayerCombatState>();
         OnHpChanged?.Invoke(CurrentHP, maxHP); // 시작 시 UI 초기화
+
+        controller = GetComponent<StarterAssets.ThirdPersonController>();
     }
 
     public void Heal(int amount)
@@ -47,7 +51,7 @@ public class PlayerHealth : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        if (isDead) return;
+        if (isDead || controller._isRolling) return;
 
         int defenseReduction = playerStats != null ? playerStats.DamageReductionFromDefense : 0;
 

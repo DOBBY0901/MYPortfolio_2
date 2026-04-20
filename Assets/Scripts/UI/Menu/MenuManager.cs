@@ -17,7 +17,6 @@ public class MenuManager : MonoBehaviour
     [Header("Panels")]
     [SerializeField] private GameObject inventoryPanel;
     [SerializeField] private GameObject equipmentPanel;
-    [SerializeField] private GameObject mapPanel;
     [SerializeField] private GameObject settingsPanel;
 
     [Header("Panels")]
@@ -88,7 +87,6 @@ public class MenuManager : MonoBehaviour
         //패널 아직 없을시 방어코드
         if (inventoryPanel != null)inventoryPanel.SetActive(tab == MenuTab.Inventory);
         if (equipmentPanel != null) equipmentPanel.SetActive(tab == MenuTab.Equipment);
-        if (mapPanel != null) mapPanel.SetActive(tab == MenuTab.Map);
         if (settingsPanel != null) settingsPanel.SetActive(tab == MenuTab.Settings);
 
     }
@@ -113,14 +111,6 @@ public class MenuManager : MonoBehaviour
         if (CurrentTab == MenuTab.Equipment) { CloseMenu(); return; }
         SwitchTab(MenuTab.Equipment);
     }
-
-    public void ToggleMap()
-    {
-        if (!IsOpen) { OpenMenu(MenuTab.Map); return; }
-        if (CurrentTab == MenuTab.Map) { CloseMenu(); return; }
-        SwitchTab(MenuTab.Map);
-    }
-
     public void ToggleSetting() //메뉴 패널 클릭용 설정창 열기
     {
         if (!IsOpen) { OpenMenu(MenuTab.Settings); return; }

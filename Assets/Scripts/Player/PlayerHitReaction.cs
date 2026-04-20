@@ -8,7 +8,7 @@ public class PlayerHitReaction   : MonoBehaviour
 
     [Header("VFX")]
     [SerializeField] private GameObject hitVfxPrefab;   // 파티클 프리팹(선택)
-    [SerializeField] private Transform vfxPoint;            // 맞는 위치(없으면 루트)
+    [SerializeField] private Transform vfxPoint;            // 파티클 생성 위치(없으면 루트)
 
     [Header("SFX")]
     [SerializeField] private AudioClip[] hitSfx;
